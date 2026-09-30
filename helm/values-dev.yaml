@@ -4,3 +4,9 @@ namespace: frontend-dev   # CHANGE_ME
 ingress:
   enabled: true
   host: release-status.dev.example.com   # CHANGE_ME
+
+image:
+  repository: https://hub.docker.com/layers/pkmisma/sample-microservice/
+  tag: "<+pipeline.stages.Build_Image.spec.execution.steps.BuildAndPushDockerRegistry_1.artifact_BuildAndPushDockerRegistry_1.stepArtifacts.publishedImageArtifacts[0].tag>"            # defaults to Chart appVersion
+  full: "<+pipeline.stages.Build_Image.spec.execution.steps.BuildAndPushDockerRegistry_1.artifact_BuildAndPushDockerRegistry_1.stepArtifacts.publishedImageArtifacts[0].url>"           # if set (e.g. <+artifact.image> from Harness), overrides repository:tag
+  pullPolicy: IfNotPresent
