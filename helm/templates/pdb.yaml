@@ -3,6 +3,7 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: {{ include "rsf.fullname" . }}
+  namespace: {{ include "rsf.namespace" . }}
   labels:
     {{- include "rsf.labels" . | nindent 4 }}
 spec:

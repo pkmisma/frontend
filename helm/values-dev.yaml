@@ -1,6 +1,6 @@
 environment: dev
 replicaCount: 1
-
+namespace: frontend-dev   # CHANGE_ME
 ingress:
   enabled: true
   host: release-status.dev.example.com   # CHANGE_ME

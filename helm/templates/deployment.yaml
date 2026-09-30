@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "rsf.fullname" . }}
+  namespace: {{ include "rsf.namespace" . }}
   labels:
     {{- include "rsf.labels" . | nindent 4 }}
 spec:
