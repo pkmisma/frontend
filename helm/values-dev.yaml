@@ -1,0 +1,6 @@
+environment: dev
+replicaCount: 1
+
+ingress:
+  enabled: true
+  host: release-status.dev.example.com   # CHANGE_ME

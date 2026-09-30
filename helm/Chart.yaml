@@ -1,0 +1,6 @@
+apiVersion: v2
+name: release-status-frontend
+description: Static frontend served by nginx (non-root, port 8080)
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
