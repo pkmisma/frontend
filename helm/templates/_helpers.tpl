@@ -26,3 +26,7 @@ environment: {{ .Values.environment | quote }}
 {{- printf "%s:%s" .Values.image.repository (default .Chart.AppVersion .Values.image.tag) -}}
 {{- end -}}
 {{- end -}}
+{{/* Namespace comes from values; falls back to the Helm release namespace if empty */}}
+{{- define "rsf.namespace" -}}
+{{- default .Release.Namespace .Values.namespace -}}
+{{- end -}}
