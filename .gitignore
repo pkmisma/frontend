@@ -1,0 +1,14 @@
+# Build artifacts
+node_modules/
+package-lock.json
+
+# OS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+
+# Helm / docs
+helm/
+*.md
