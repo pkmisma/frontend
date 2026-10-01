@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hello K8s</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <h1 id="title">Hello from Kubernetes!</h1>
+    <p id="message">This frontend is served via nginx from a Docker container.</p>
+
+    <div class="card">
+      <label for="nameInput">Your name</label>
+      <input id="nameInput" type="text" placeholder="World" />
+
+      <label for="ratingInput">Rating (1-5)</label>
+      <input id="ratingInput" type="number" min="1" max="5" value="5" />
+
+      <label for="commentInput">Comment</label>
+      <input id="commentInput" type="text" placeholder="How was your experience?" />
+
+      <button id="submitBtn">Submit feedback</button>
+      <p id="status" class="status"></p>
+    </div>
+
+    <div class="card">
+      <h2>Recent feedback</h2>
+      <ul id="feedbackList" class="feedback-list"></ul>
+      <button id="refreshBtn" class="secondary">Refresh</button>
+    </div>
+
+    <footer>
+      <span>Frontend: <strong id="frontendVersion">1.0.0</strong></span>
+      <span class="sep">·</span>
+      <span>API: <strong id="apiInfo">loading...</strong></span>
+    </footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
