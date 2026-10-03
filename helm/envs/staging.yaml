@@ -1,3 +1,0 @@
-replicaCount: 2
-ingress:
-  host: cosmic-staging.example.com

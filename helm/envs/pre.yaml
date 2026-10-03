@@ -1,0 +1,4 @@
+namespace: cosmic-pre
+replicaCount: 2
+ingress:
+  host: cosmic-pre.example.com

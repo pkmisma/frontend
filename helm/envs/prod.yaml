@@ -1,3 +1,4 @@
+namespace: cosmic-prd
 replicaCount: 3
 ingress:
   host: cosmic.example.com

@@ -16,8 +16,8 @@ npm install && npm run dev   # http://localhost:5173, /api proxied to :3000
 3. **Deploy** - Helm, same namespace as the backend:
 ```
 helm upgrade --install cosmic-frontend ./helm \
-  -n cosmic-facts --create-namespace \
-  -f helm/values.yaml -f helm/envs/<dev|staging|prod>.yaml \
+  -n cosmic-<dev|pre|prd> --create-namespace \
+  -f helm/values.yaml -f helm/envs/<dev|pre|prod>.yaml \
   --set image.repository=<registry>/cosmic-frontend --set image.tag=<tag>
 ```
 Set `ingress.host` per environment (edit `helm/envs/*.yaml`). Without an ingress controller use

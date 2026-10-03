@@ -2,6 +2,9 @@
 nameOverride: ""
 fullnameOverride: cosmic-frontend
 
+# Target namespace (set per environment in envs/*.yaml)
+namespace: cosmic-dev
+
 replicaCount: 1
 
 image:
