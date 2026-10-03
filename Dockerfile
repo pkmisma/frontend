@@ -1,28 +1,18 @@
-# ---- build stage ----
-FROM node:20-alpine AS build
-WORKDIR /app
+FROM nginx:1.25-alpine
 
-COPY package.json package-lock.json ./
-RUN npm ci
+ARG BACKEND_UPSTREAM=backend-api:80
+ENV BACKEND_UPSTREAM=${BACKEND_UPSTREAM}
 
-COPY . .
+RUN rm -rf /usr/share/nginx/html/*
+COPY src/ /usr/share/nginx/html/
+COPY nginx.conf.template /etc/nginx/conf.d/default.conf.template
 
-# Passed from the Harness build step (see README notes in chat)
-ARG VITE_APP_VERSION=dev
-ARG VITE_GIT_COMMIT=unknown
-ARG VITE_GIT_BRANCH=unknown
-ARG VITE_BUILD_TIME=unknown
-ARG VITE_PIPELINE_RUN=local
-ENV VITE_APP_VERSION=$VITE_APP_VERSION \
-    VITE_GIT_COMMIT=$VITE_GIT_COMMIT \
-    VITE_GIT_BRANCH=$VITE_GIT_BRANCH \
-    VITE_BUILD_TIME=$VITE_BUILD_TIME \
-    VITE_PIPELINE_RUN=$VITE_PIPELINE_RUN
+# Materialize the nginx config from the template using envsubst.
+# Default.conf is generated at container start so the upstream can be
+# overridden per-environment without rebuilding the image.
+RUN envsubst '${BACKEND_UPSTREAM}' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf \
+    && rm /etc/nginx/conf.d/default.conf.template
 
-RUN npm run build
+EXPOSE 80
 
-# ---- runtime stage (non-root, listens on 8080) ----
-FROM nginxinc/nginx-unprivileged:1.27-alpine
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/dist /usr/share/nginx/html
-EXPOSE 8080
+CMD ["nginx", "-g", "daemon off;"]
