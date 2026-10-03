@@ -1,6 +1,33 @@
 namespace: cosmic-dev
+
+# Default values - override per environment with envs/<env>.yaml
+nameOverride: ""
+fullnameOverride: cosmic-frontend
+
 replicaCount: 1
+
 image:
-  pullPolicy: Always
+  repository: pkmisma/sample-microservice
+  tag: <+pipeline.executionId>
+  pullPolicy: IfNotPresent
+
+# In-cluster URL of the backend Service (same namespace => short name works)
+backendUrl: http://cosmic-backend:80
+
+service:
+  type: ClusterIP
+  port: 80
+  nodePort: null
+
 ingress:
-  host: cosmic-dev.example.com
+  enabled: true
+  className: nginx
+  host: cosmic.local
+
+resources:
+  requests:
+    cpu: 25m
+    memory: 32Mi
+  limits:
+    cpu: 100m
+    memory: 64Mi
