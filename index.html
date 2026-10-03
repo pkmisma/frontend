@@ -2,11 +2,31 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Release status</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cosmic Facts</title>
   </head>
   <body>
-    <main id="app"></main>
+    <main class="app">
+      <header>
+        <h1>🚀 Cosmic Facts</h1>
+        <p class="tagline">A tiny microservices demo: this page (frontend) talks to a separate backend API.</p>
+      </header>
+
+      <section class="card" id="fact-card" aria-live="polite">
+        <div class="emoji" id="emoji">✨</div>
+        <h2 id="title">Loading...</h2>
+        <p id="text"></p>
+        <div class="actions">
+          <button id="like">👍 Like <span id="likes">0</span></button>
+          <button id="next" class="secondary">🎲 Another fact</button>
+        </div>
+      </section>
+
+      <section class="status" id="status">
+        <span class="dot" id="dot"></span>
+        <span id="status-text">Connecting to backend...</span>
+      </section>
+    </main>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

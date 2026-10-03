@@ -1,43 +1,58 @@
 import "./style.css";
 
-// Injected at image build time via Docker --build-arg (see Dockerfile)
-const env = import.meta.env;
-const build = [
-  ["Version", env.VITE_APP_VERSION],
-  ["Commit", env.VITE_GIT_COMMIT],
-  ["Branch", env.VITE_GIT_BRANCH],
-  ["Built", env.VITE_BUILD_TIME],
-  ["Pipeline run", env.VITE_PIPELINE_RUN],
-];
+const $ = (id) => document.getElementById(id);
+let current = null;
 
-document.querySelector("#app").innerHTML = `
-  <header>
-    <h1>Release status</h1>
-    <p id="health" class="pill pending">Checking service…</p>
-  </header>
-  <section>
-    <h2>This build</h2>
-    <dl>
-      ${build.map(([k, v]) => `<dt>${k}</dt><dd>${v || "not set"}</dd>`).join("")}
-    </dl>
-  </section>
-  <footer>Served from <span id="host"></span></footer>
-`;
+async function api(path, options) {
+  const res = await fetch(`/api${path}`, options);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
 
-document.querySelector("#host").textContent = location.host;
+function render(fact) {
+  current = fact;
+  $("emoji").textContent = fact.emoji;
+  $("title").textContent = fact.title;
+  $("text").textContent = fact.text;
+  $("likes").textContent = fact.likes;
+}
 
-async function checkHealth() {
-  const el = document.querySelector("#health");
+async function loadRandom() {
   try {
-    const res = await fetch("/healthz", { cache: "no-store" });
-    if (!res.ok) throw new Error(res.status);
-    el.textContent = `Healthy · checked ${new Date().toLocaleTimeString()}`;
-    el.className = "pill ok";
-  } catch {
-    el.textContent = "Service not responding";
-    el.className = "pill bad";
+    render(await api("/facts/random"));
+  } catch (err) {
+    $("title").textContent = "Backend unreachable";
+    $("text").textContent = `Could not load a fact (${err.message}).`;
   }
 }
 
-checkHealth();
-setInterval(checkHealth, 15000);
+async function like() {
+  if (!current) return;
+  try {
+    render(await api(`/facts/${current.id}/like`, { method: "POST" }));
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// Shows which backend pod / version / environment served us - handy to see load balancing
+async function loadInfo() {
+  try {
+    const info = await api("/info");
+    $("dot").className = "dot ok";
+    $("status-text").textContent = `Backend ${info.version} · env: ${info.environment} · pod: ${info.pod}`;
+  } catch {
+    $("dot").className = "dot bad";
+    $("status-text").textContent = "Backend offline";
+  }
+}
+
+$("like").addEventListener("click", like);
+$("next").addEventListener("click", () => {
+  loadRandom();
+  loadInfo();
+});
+
+loadRandom();
+loadInfo();
+setInterval(loadInfo, 10000);

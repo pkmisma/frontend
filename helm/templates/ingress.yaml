@@ -2,21 +2,12 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "rsf.fullname" . }}
-  namespace: {{ include "rsf.namespace" . }}
+  name: {{ include "cosmic-frontend.fullname" . }}
   labels:
-    {{- include "rsf.labels" . | nindent 4 }}
-  {{- with .Values.ingress.annotations }}
-  annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    {{- include "cosmic-frontend.labels" . | nindent 4 }}
 spec:
   {{- with .Values.ingress.className }}
   ingressClassName: {{ . }}
-  {{- end }}
-  {{- if .Values.ingress.tls }}
-  tls:
-    {{- toYaml .Values.ingress.tls | nindent 4 }}
   {{- end }}
   rules:
     - host: {{ .Values.ingress.host | quote }}
@@ -26,7 +17,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: {{ include "rsf.fullname" . }}
+                name: {{ include "cosmic-frontend.fullname" . }}
                 port:
                   name: http
 {{- end }}

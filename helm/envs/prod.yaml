@@ -1,0 +1,6 @@
+replicaCount: 3
+ingress:
+  host: cosmic.example.com
+resources:
+  requests: { cpu: 50m, memory: 48Mi }
+  limits: { cpu: 200m, memory: 96Mi }

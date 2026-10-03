@@ -1,0 +1,5 @@
+replicaCount: 1
+image:
+  pullPolicy: Always
+ingress:
+  host: cosmic-dev.example.com

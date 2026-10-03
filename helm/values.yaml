@@ -1,40 +1,31 @@
-# Defaults shared by all environments. Override per environment in values-<env>.yaml
-environment: dev
+# Default values - override per environment with envs/<env>.yaml
+nameOverride: ""
+fullnameOverride: cosmic-frontend
 
 replicaCount: 1
 
 image:
-  repository: europe-docker.pkg.dev/CHANGE_ME/CHANGE_ME/release-status-frontend
-  tag: ""            # defaults to Chart appVersion
-  full: ""           # if set (e.g. <+artifact.image> from Harness), overrides repository:tag
+  repository: your-registry/cosmic-frontend
+  tag: latest
   pullPolicy: IfNotPresent
 
-imagePullSecrets: []
-podAnnotations: {}
+# In-cluster URL of the backend Service (same namespace => short name works)
+backendUrl: http://cosmic-backend:80
 
 service:
   type: ClusterIP
   port: 80
+  nodePort: null
 
 ingress:
-  enabled: false
-  className: ""
-  host: ""
-  annotations: {}
-  tls: []
+  enabled: true
+  className: nginx
+  host: cosmic.local
 
 resources:
-  requests: { cpu: 50m, memory: 32Mi }
-  limits: { cpu: 200m, memory: 128Mi }
-
-autoscaling:
-  enabled: false
-  minReplicas: 2
-  maxReplicas: 4
-  targetCPUUtilizationPercentage: 70
-
-pdb:
-  enabled: false
-  minAvailable: 1
-
-spreadAcrossZones: false
+  requests:
+    cpu: 25m
+    memory: 32Mi
+  limits:
+    cpu: 100m
+    memory: 64Mi

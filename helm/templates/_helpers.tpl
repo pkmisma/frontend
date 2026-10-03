@@ -1,32 +1,25 @@
-{{- define "rsf.fullname" -}}
-{{- if contains .Chart.Name .Release.Name -}}
-{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- printf "%s-%s" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-{{- end -}}
+{{- define "cosmic-frontend.name" -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- end }}
 
-{{- define "rsf.selectorLabels" -}}
-app.kubernetes.io/name: {{ .Chart.Name }}
+{{- define "cosmic-frontend.fullname" -}}
+{{- if .Values.fullnameOverride }}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- printf "%s-%s" .Release.Name (include "cosmic-frontend.name" .) | trunc 63 | trimSuffix "-" }}
+{{- end }}
+{{- end }}
+
+{{- define "cosmic-frontend.labels" -}}
+app.kubernetes.io/name: {{ include "cosmic-frontend.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end -}}
-
-{{- define "rsf.labels" -}}
-{{ include "rsf.selectorLabels" . }}
+app.kubernetes.io/version: {{ .Values.image.tag | default .Chart.AppVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/part-of: cosmic-facts
 helm.sh/chart: {{ printf "%s-%s" .Chart.Name .Chart.Version }}
-environment: {{ .Values.environment | quote }}
-{{- end -}}
+{{- end }}
 
-{{/* image.full (e.g. from Harness <+artifact.image>) wins over repository:tag */}}
-{{- define "rsf.image" -}}
-{{- if .Values.image.full -}}
-{{- .Values.image.full -}}
-{{- else -}}
-{{- printf "%s:%s" .Values.image.repository (default .Chart.AppVersion .Values.image.tag) -}}
-{{- end -}}
-{{- end -}}
-{{/* Namespace comes from values; falls back to the Helm release namespace if empty */}}
-{{- define "rsf.namespace" -}}
-{{- default .Release.Namespace .Values.namespace -}}
-{{- end -}}
+{{- define "cosmic-frontend.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "cosmic-frontend.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
