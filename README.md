@@ -11,8 +11,8 @@ npm install && npm run dev   # http://localhost:5173, /api proxied to :3000
 ```
 
 ## Harness pipeline
-1. **Build app** - `npm install && npm run build` (outputs `dist/`)
-2. **Build image** - `docker build -t <registry>/cosmic-frontend:<+pipeline.sequenceId> .` and push
+1. **Build app** - `npm install && npm run build` (validates the build)
+2. **Build image** - `docker build -t <registry>/cosmic-frontend:<+pipeline.sequenceId> .` and push (the Dockerfile builds `dist/` itself)
 3. **Deploy** - Helm, same namespace as the backend:
 ```
 helm upgrade --install cosmic-frontend ./helm \
